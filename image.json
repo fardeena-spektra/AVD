@@ -1,0 +1,44 @@
+{
+  "if": {
+    "allOf": [
+      { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
+      {
+        "not": {
+          "anyOf": [
+            {
+              "allOf": [
+                { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsServer" },
+                { "field": "Microsoft.Compute/imageOffer", "equals": "WindowsServer" },
+                { "field": "Microsoft.Compute/imageSku", "equals": "2022-datacenter-azure-edition" }
+              ]
+            },
+            {
+              "allOf": [
+                { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsServer" },
+                { "field": "Microsoft.Compute/imageOffer", "equals": "windowsserver2022" },
+                { "field": "Microsoft.Compute/imageSku", "equals": "2022-datacenter-azure-edition" }
+              ]
+            },
+            {
+              "allOf": [
+                { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsDesktop" },
+                { "field": "Microsoft.Compute/imageOffer", "equals": "Windows-11" },
+                { "field": "Microsoft.Compute/imageSku", "equals": "win11-24h2-avd" }
+              ]
+            },
+            {
+              "allOf": [
+                { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsDesktop" },
+                { "field": "Microsoft.Compute/imageOffer", "equals": "office-365" },
+                { "field": "Microsoft.Compute/imageSku", "equals": "win10-22h2-avd-m365" }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "then": {
+    "effect": "deny"
+  }
+}
