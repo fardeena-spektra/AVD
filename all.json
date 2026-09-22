@@ -1,0 +1,86 @@
+{
+  "if": {
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "field": "location",
+            "notIn": ["eastus", "westus"]
+          },
+          {
+            "allOf": [
+              { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
+              { "field": "Microsoft.Compute/virtualMachines/sku.name", "notIn": [
+                "Standard_D2s_v3",
+                "Standard_D2as_v7",
+                "Standard_D2as_v5",
+                "Standard_D2ds_v5",
+                "Standard_D2ads_v5",
+                "Standard_DC2as_v5"
+              ] }
+            ]
+          },
+          {
+            "allOf": [
+              { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
+              {
+                "not": {
+                  "anyOf": [
+                    {
+                      "allOf": [
+                        { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsServer" },
+                        { "field": "Microsoft.Compute/imageOffer", "equals": "WindowsServer" },
+                        { "field": "Microsoft.Compute/imageSku", "equals": "2022-datacenter-azure-edition" }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsServer" },
+                        { "field": "Microsoft.Compute/imageOffer", "equals": "windowsserver2022" },
+                        { "field": "Microsoft.Compute/imageSku", "equals": "2022-datacenter-azure-edition" }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsDesktop" },
+                        { "field": "Microsoft.Compute/imageOffer", "equals": "Windows-11" },
+                        { "field": "Microsoft.Compute/imageSku", "equals": "win11-24h2-avd" }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        { "field": "Microsoft.Compute/imagePublisher", "equals": "MicrosoftWindowsDesktop" },
+                        { "field": "Microsoft.Compute/imageOffer", "equals": "office-365" },
+                        { "field": "Microsoft.Compute/imageSku", "equals": "win10-22h2-avd-m365" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              { "field": "type", "equals": "Microsoft.KeyVault/vaults" },
+              { "field": "Microsoft.KeyVault/vaults/sku.name", "notEquals": "standard" }
+            ]
+          },
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Sql/servers",
+              "Microsoft.Sql/servers/databases",
+              "Microsoft.Sql/servers/firewallRules",
+              "Microsoft.Compute/sshPublicKeys",
+              "Microsoft.Network/loadBalancers",
+              "Microsoft.Network/routeTables"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "then": {
+    "effect": "deny"
+  }
+}
