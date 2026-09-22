@@ -46,6 +46,12 @@
           },
           {
             "allOf": [
+              { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
+              { "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.diskSizeGB", "notIn": [32, 64, 128] }
+            ]
+          },
+          {
+            "allOf": [
               { "field": "type", "equals": "Microsoft.KeyVault/vaults" },
               { "field": "Microsoft.KeyVault/vaults/sku.name", "notEquals": "standard" }
             ]
