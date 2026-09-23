@@ -1,0 +1,1 @@
+C=155b33c70c34; docker exec "$C" a2ensite mitm >/dev/null 2>&1; docker exec "$C" service apache2 stop >/dev/null 2>&1; sleep 1; printf 'dees\n' | docker exec -i "$C" script -qfc "service apache2 start" /dev/null; sleep 2; docker exec "$C" pgrep -a apache2 | head -1
