@@ -1,0 +1,264 @@
+Now i have create lab which will be based on AWS, We have to seed Broken scenarios
+
+Troubleshoot EC2 Connectivity
+Fix EC2-to-S3 Access Using IAM Roles
+Troubleshoot EC2-to-RDS Connectivity
+Repair an Application Load Balancer
+Troubleshoot Private EC2 Internet Connectivity
+Networking
+Like as I mentioned above 
+
+Now ill Provide you the references for AWS based labs
+CFT
+This is CFT 
+
+look may be the one i sharing with you is not broken env lab but like this u can create a windows virtual machine  with t2.medium or t3.medium sku 
+
+Need username & password not ssh keys (Username should be professional) for validation management in aws instance requires ssm agent running as i have given in my bootstrap like if it eabled aswell it requires to restart the agent so it will work properly the exact things are required to create vm cloudlabs friendly like in reffered in my cft Task execution role & all u just clone the same wrapper,
+Normally in aws we don't required any parameter file, but to make it cloudlabs friendly we require parameter files aswell
+
+this ill reffer you 
+
+{
+  "parameters": {
+    "AccessKey": {
+      "value": "GET-ACCESS-KEY"
+    },
+    "SecretKey": {
+      "value": "GET-SECRET-KEY"
+    },
+    "CloudLabsDeploymentID": {
+      "value": "GET-DEPLOYMENT-ID"
+    },
+    "CheckAcknowledgement": {
+      "value": "TRUE"
+    },
+    "vpcCidr": {
+      "value": "10.10.0.0/16"
+    },
+    "subnetCidr": {
+      "value": "10.10.0.0/24"
+    },
+    "VMUserName": {
+      "value": "Labuser"
+    },
+    "VMPassword": {
+      "value": "GEN-PASSWORD"
+    }
+  }
+}
+In My case access & secret access keys not required so remove it 
+
+No what I want GettingStarted.md, Labguide-01.md Labguide-02.md Labguide-03.md 
+
+Each lab guide will cover 1 scenario
+
+In first 2 scenarios Handson assessment should be there with proper steps because for each step I have to add screenshots of assessment because this will be a guided lab, in last scenario we need inline questions which should be related with AWS cloud, Every correct answer should have 2 marks, single choice & multiple choice all option length should be same correct & wrong options, it will work if correct option length is 1 or 2 chars less than other but should not be more than other options,
+Now for reference this is the inline question:
+
+this is just an example 
+
+## MetaData
+Question Type : Single Choice
+
+## Question
+1. Read the autoscale setting in the architecture diagram. Does the App Service tier meet the stated availability requirement of surviving a single instance failure?
+
+## Options
+Option 1 : No: a minimum of 2 instances is not enough, at least 4 running instances are required for that guarantee.
+
+Option 2 : Yes, but only because Azure Front Door itself provides the instance-level failover, not App Service.
+
+Option 3 : No: autoscale only adds instances under load and does nothing to protect against a single failure.
+
+Option 4 : Yes: the minimum of 2 instances means one instance failing still leaves a second instance serving traffic.
+
+## Answers
+Option 4 : 2
+
+## Number of Retries
+1
+
+Now ill share you 
+
+This will be a folder structure 
+
+as mentioned in screenshot but the given is for other in this need to add Deployment Package (for cft & parameters) 
+Validation package for validation scripts
+These are sample AWS validators took from other labs
+
+$region = "us-east-1"
+
+Set-DefaultAWSRegion -Region $region
+
+try {
+
+    $lambda = Get-LMFunctionConfiguration `
+        -FunctionName "ServerlessWebApp" `
+        -ErrorAction Stop
+
+    if ($lambda.Runtime -eq "python3.12") {
+
+        $message = @{
+            Status  = "Succeeded"
+            Message = "Lambda function exists and runtime is python3.12."
+        } | ConvertTo-Json
+    }
+    else {
+
+        $message = @{
+            Status  = "Failed"
+            Message = "Runtime is not python3.12."
+        } | ConvertTo-Json
+    }
+}
+catch {
+
+    $message = @{
+        Status  = "Failed"
+        Message = $_.Exception.Message
+    } | ConvertTo-Json
+}
+
+Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
+    StatusCode = [System.Net.HttpStatusCode]::OK
+    Body       = $message
+})
+
+also
+
+$region = "us-east-1"
+
+Set-DefaultAWSRegion -Region $region
+
+try {
+
+    $logGroupName = "/aws/lambda/ServerlessWebApp"
+
+    # Ensure log group exists
+    $logGroup = Get-CWLLogGroup -LogGroupNamePrefix $logGroupName
+
+    if (-not $logGroup) {
+        throw "CloudWatch log group does not exist."
+    }
+
+    # Get latest log stream
+    $streams = Get-CWLLogStream -LogGroupName $logGroupName
+
+    if (-not $streams) {
+        throw "No log streams found. S3 trigger not fired yet."
+    }
+
+    $latestStream = $streams | Sort-Object LastEventTimestamp -Descending | Select-Object -First 1
+
+    if (-not $latestStream) {
+        throw "No recent log stream found."
+    }
+
+    # Get log events
+    $events = Get-CWLLogEvent `
+        -LogGroupName $logGroupName `
+        -LogStreamName $latestStream.LogStreamName
+
+    $logText = ($events.Events | ForEach-Object { $_.Message }) -join " "
+
+    # Validate trigger activity (S3 upload event)
+    if ($logText -match "s3" -or $logText -match "ObjectCreated" -or $logText -match "PUT") {
+
+        $message = @{
+            Status  = "Succeeded"
+            Message = "S3 upload successfully logged in CloudWatch."
+        } | ConvertTo-Json -Compress
+    }
+    else {
+
+        $message = @{
+            Status  = "Failed"
+            Message = "CloudWatch logs exist but no S3 event detected."
+        } | ConvertTo-Json -Compress
+    }
+}
+catch {
+
+    $message = @{
+        Status  = "Failed"
+        Message = $_.Exception.Message
+    } | ConvertTo-Json -Compress
+}
+
+Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
+    StatusCode = 200
+    Body = $message
+})
+
+but the similar wrapper works for cloud labs backend (Manged azure function apps)
+
+But the one which Iam sharing u is from different vpn based lab but more practical & perfect 
+
+
+Now this sc again show sub folder structure 
+
+& in labguide u have to reffer inline questions in this way practical scenario based questions
+
+# **Scenario 1: Reviewing the BOOKIT Target Architecture and Service Selection**
+
+## **Module 01 : Cloud-native architecture (Azure and AWS Architect)**
+
+
+Nedbank's branch-appointment booking service, `BOOKIT`, is a small customer-facing app being
+handed to a junior architect for a fundamentals review. Below is the target architecture diagram
+description and the service selection table the design team produced when it was first built.
+
+**Target architecture, described:**
+
+```
+Customer browser/app
+   -> Azure Front Door (public entry, TLS termination, WAF)
+   -> Azure App Service (Standard tier, 2 instances, autoscale 2-4 on CPU)
+   -> Azure SQL Database (General Purpose, single instance, no read replica)
+   -> Azure Blob Storage (booking confirmation PDFs, Hot tier)
+```
+
+**Service selection table, with the stated requirement and the service chosen:**
+
+| Requirement | Service selected | Notes on record |
+|---|---|---|
+| Public entry point with basic web protection | Azure Front Door with WAF policy | Chosen over a plain Application Gateway for its WAF |
+| Application hosting, no server management | Azure App Service | PaaS, avoids OS patching for a 2-person team |
+| Transactional booking data | Azure SQL Database | Relational, ACID needed for appointment slots |
+| Confirmation document storage | Azure Blob Storage, Hot tier | Documents are read frequently in the first 30 days |
+
+**Availability requirement on record:** BOOKIT must remain available if a single App Service
+instance fails, but a full regional outage is accepted as out of scope for this release.
+
+**Reference notes** - background you may need. These are not clues specific to this incident.
+
+- **Autoscale** adds or removes application instances based on a metric like CPU, within a configured minimum and maximum. Running at the minimum of 2 instances already protects against a single instance failing.
+- **Hot tier** blob storage costs more per gigabyte than Cool or Archive tiers but has no retrieval fee and the lowest access latency, which suits data read often and soon.
+
+## Answer the following questions
+
+
+
+<question source="../../Inline-Questions/question-01.md" />
+
+<br>
+
+<question source="../../Inline-Questions/question-02.md" />
+
+<br>
+
+<question source="../../Inline-Questions/question-03.md" />
+
+<br>
+
+<question source="../../Inline-Questions/question-04.md" />
+
+<br>
+
+<question source="../../Inline-Questions/question-05.md" />
+
+Click the **Next** button to begin Scenario 2.
+
+this is just for an example & masterdoc also you are familiar with 
+
