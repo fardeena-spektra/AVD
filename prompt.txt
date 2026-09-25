@@ -262,3 +262,36 @@ Click the **Next** button to begin Scenario 2.
 
 this is just for an example & masterdoc also you are familiar with 
 
+
+Now generate a whole package accordingly in zip ill download & scenarios should be proper broken not too easy more than intermediate & should be closed to difficult level 
+
+total 3 scenario + getting started page 2 scenario Handson 3rd one is inline question based 
+
+use the similar format as below assessment use ill share one demo masterdoc go through each link & make it as per it 
+
+[
+  {
+    "Name": "Modern SecOps with Unified Platform",
+    "Language": "English",
+    "Files": [
+      {
+        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/CloudLabsAI-Azure/Modern-SecOps-with-Unified-Platform/refs/heads/prod-v2/Lab03/gettingstarted-updated-mcp.md",
+        "Order": 1
+      },
+      {
+        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/CloudLabsAI-Azure/Modern-SecOps-with-Unified-Platform/refs/heads/prod-v2/Lab03/Lab03MCPCne.md",
+        "Order": 2
+      }
+    ]
+  }
+]
+
+
+
+also check if u are accessing the labguide preview 
+
+CloudLabs LabGuide Preview
+
+
+Now generate the package without stopping & without waiting my consent 
+
